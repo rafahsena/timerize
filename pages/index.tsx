@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/layout";
+import { useSession, signIn, signOut } from "next-auth/client";
 import { databaseConnection, isConnected } from "../util/mongodb";
 
 export type HomeProps = {
@@ -6,7 +7,21 @@ export type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ isConnected }: HomeProps) => {
-  return <Box></Box>;
+  const [session, loading] = useSession();
+  if (session) {
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
+  );
 };
 
 export default Home;
